@@ -79,6 +79,7 @@ def unserialize_bo_json(logs):
     if isinstance(logs, str):
         logs = [logs]
 
+
     for log in logs:
         with open(log, "r") as j:
             while True:

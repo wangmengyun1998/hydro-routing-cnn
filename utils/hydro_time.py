@@ -30,7 +30,8 @@ def t_range2_array(t_range, *, step=np.timedelta64(1, 'D')):
     return tArray
 
 
-def t_range_days(t_range, *, step=np.timedelta64(1, 'D')):#用于控制时间间隔，间隔多少年/天/时/分/秒
+#def t_range_days(t_range, *, step=np.timedelta64(1, 'D')):
+def t_range_days(t_range):#用于控制时间间隔，间隔多少年/天/时/分/秒
 
     """将给定的一个区间，转换为每日一个值的数组"""
     # sd = dt.datetime.strptime(t_range[0], '%Y-%m-%d')
@@ -41,25 +42,26 @@ def t_range_days(t_range, *, step=np.timedelta64(1, 'D')):#用于控制时间间
     if len(t_range)>2:
         sd1 = dt.datetime.strptime(t_range[0], '%Y-%m-%d')
         ed1 = dt.datetime.strptime(t_range[1], '%Y-%m-%d')
-        group1=np.arange(sd1, ed1, step)
+        group1=np.arange(sd1, ed1, dtype='datetime64[D]')
         sd2 = dt.datetime.strptime(t_range[2], '%Y-%m-%d')
         ed2 = dt.datetime.strptime(t_range[3], '%Y-%m-%d')
-        group2 = np.arange(sd2, ed2, step)
+        group2 = np.arange(sd2, ed2,dtype='datetime64[D]')
         sd3 = dt.datetime.strptime(t_range[4], '%Y-%m-%d')
         ed3 = dt.datetime.strptime(t_range[5], '%Y-%m-%d')
-        group3 = np.arange(sd3, ed3, step)
+        group3 = np.arange(sd3, ed3,dtype='datetime64[D]')
         sd4 = dt.datetime.strptime(t_range[6], '%Y-%m-%d')
         ed4 = dt.datetime.strptime(t_range[7], '%Y-%m-%d')
-        group4 = np.arange(sd4, ed4, step)
+        group4 = np.arange(sd4, ed4, dtype='datetime64[D]')
         t_array=np.concatenate((group1, group2,group3,group4))
     else:
         sd1 = dt.datetime.strptime(t_range[0], '%Y-%m-%d')
         ed1 = dt.datetime.strptime(t_range[1], '%Y-%m-%d')
-        group1=np.arange(sd1, ed1, step)
+        group1=np.arange(sd1, ed1, dtype='datetime64[D]')
         t_array=group1
     return t_array
-#     print(t_array)
-# t_range=["1998-01-01","2008-01-01"]
+
+
+# t_range=["1998-01-01","1999-01-01"]
 # a=t_range_days(t_range)
 # print(list(a))
 # print(a.shape[0])

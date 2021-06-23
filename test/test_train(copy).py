@@ -1,26 +1,20 @@
 import os
 import unittest
-from hydroDL.model.cnn import TryCnn
+
 import definitions
 from data import *
 from hydroDL.master import to_supervised, cnn_train
 from refine import *
 from utils import *
-from hydroDL.model import crit
 
 
 class MyTestCase(unittest.TestCase):
     config_file = definitions.CONFIG_FILE
     project_dir = definitions.ROOT_DIR
-    out_folder = os.path.join(project_dir, "out_folder")
-    if not os.path.isdir(out_folder):
-        os.makedirs(out_folder)
-    check_point_file = os.path.join(out_folder, 'checkpoint.pt')
     dataset = 'sanxia'
     dir_db = os.path.join(project_dir, r'example\data', dataset)
     dir_out = os.path.join(project_dir, r'example\output', dataset)
     dir_temp = os.path.join(project_dir, r'example\temp', dataset)
-    dir_out_folder=os.path.join(project_dir,r'example\temp', dataset)
     data_source_dump = os.path.join(dir_temp, 'data_source.txt')
     stat_file = os.path.join(dir_temp, 'Statistics.json')
     flow_file = os.path.join(dir_temp, 'flow.npy')
@@ -49,7 +43,6 @@ class MyTestCase(unittest.TestCase):
         stat_dict=self.stat_dict
         model_data = self.data_model
         model_dict = model_data.data_source.data_config.model_dict
-        # out_folder = self.out_folder
         # bo_json_file = os.path.join(model_dict["dir"]["Out"], "bo_logs.json")
         # bo_json = unserialize_bo_json(bo_json_file)
         # print(bo_json)
@@ -64,15 +57,14 @@ class MyTestCase(unittest.TestCase):
         # batch_size = int(40)
         # epochs = int(82)
         n_input = int(14)
-        epochs = int(300)
-        patience=int(30)
+        batch_size = int(100)
+        epochs = int(100)
         # 调用to_supervised将数据分为输入和输出部分
         data, targets = to_supervised(model_data.load_data(model_dict), n_input)
-        try_cnn = TryCnn()
-        model_trained = cnn_train(try_cnn, input=data, output=targets, patience=patience, epochs=epochs,crit=crit)
-        # model_trained = cnn_train(try_cnn, input=data, output=targets,patience=patience, batch_size=batch_size, epochs=epochs,crit=crit,model_dict=model_dict,out_folder=out_folder)
-        # model_trained = cnn_train(input=data, output=targets, batch_size=batch_size, epochs=epochs, model_dict=model_dict,stat_dict=stat_dict)
+        model_trained = cnn_train(input=data, output=targets, batch_size=batch_size, epochs=epochs, model_dict=model_dict,stat_dict=stat_dict)
         # cnn_pred_value, cnn_obs_value = cnn_train_forecast(input=data, output=targets, stat_dict)
+
+
         print(model_trained)
 
 
@@ -83,3 +75,4 @@ class MyTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()  #运行类中每一个测试用例
+

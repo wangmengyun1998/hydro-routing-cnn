@@ -6,6 +6,10 @@ from utils import *
 
 
 class MyTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        print("hello world")
+    def test_add(self):
+        print(1+1)
     def test_data_model(self):
         print('Starting ...')
 
@@ -28,7 +32,8 @@ class MyTestCase(unittest.TestCase):
         serialize_json(dataModel.stat_dict, stat_file)
         serialize_numpy(dataModel.data_flow, flow_file)
         serialize_json(dataModel.t_s_dict, t_s_dict_file)
-
+    def tearDown(self) -> None:
+        print("bye bye")
 
 if __name__ == '__main__':
     unittest.main()

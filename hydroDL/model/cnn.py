@@ -1,6 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+
+
+import numpy as np
 torch.manual_seed(0);
 
 
@@ -59,28 +63,80 @@ def calFinalsize1d(nobs, noutk, ksize, stride, pool):
     Ncnnout = int(Lout * noutk)  # total CNN feature number after convolution
     return Ncnnout
 
-
-class TryCnn(nn.Module):
+# def relu(x):
+#      return np.maximum(0, x-20000)
+class trycnn(nn.Module):
     def __init__(self, output_dim=1):
         super().__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=(1,6)),
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=(1,12)),
+            nn.MaxPool2d(kernel_size=1, stride=1, padding=0),
+            nn.Conv2d(in_channels=32, out_channels=128, kernel_size=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=1, padding=1),
-            nn.Conv2d(in_channels=32, out_channels=128, kernel_size=2),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=1, padding=1),
+            nn.MaxPool2d(kernel_size=1, stride=1, padding=0),
         )
         self.regression = nn.Sequential(
             nn.Dropout(p=0.25),
-            nn.Linear(128* 17 * 2, 128),
+            nn.Linear(9344, 100),
             nn.ReLU(inplace=True),
             nn.Dropout(p=0.5),
-            nn.Linear(128, output_dim)
+            nn.Linear(100, output_dim)
         )
+
+
 
     def forward(self, x):
         x1 = self.features(x)
+        # x1=nn.ReLU(0,x1-20000)
+
+        x2 = x1.view(x1.shape[0], -1)
+
+        y = self.regression(x2)
+        return y
+
+class TryCnn(nn.Module):
+    # def __init__(self, output_dim=1):
+    #     super().__init__()
+    #     self.features = nn.Sequential(
+    #         nn.Conv2d(in_channels=1, out_channels=32, kernel_size=(3,4)),
+    #         nn.ReLU(inplace=True),
+    #         nn.MaxPool2d(kernel_size=2, stride=1, padding=1),
+    #
+    #         nn.Conv2d(in_channels=32, out_channels=128, kernel_size=2),
+    #         nn.ReLU(inplace=True),
+    #         nn.MaxPool2d(kernel_size=2, stride=1, padding=1)
+    #
+    #     )
+
+    def __init__(self, output_dim=1):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=(3,4)),
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(1, 1)),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=1, padding=1),
+
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=(1,1)),
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=2 ),
+
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=1, padding=1)
+        )
+
+        self.regression = nn.Sequential(
+            nn.Dropout(p=0.25),
+            # nn.Dropout(p=0.25),
+            nn.Linear(  4992, 95),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.5),
+            nn.Linear(95, output_dim)
+        )
+    def forward(self, x):
+        x1 = self.features(x)
+        # print(x1.size)
+        # x1=nn.ReLU(0,x1-20000)
+        # x2=x1.view(100,-1)
+        # print(x1.shape[0])
         x2 = x1.view(x1.shape[0], -1)
         y = self.regression(x2)
         return y

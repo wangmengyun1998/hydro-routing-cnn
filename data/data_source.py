@@ -38,7 +38,7 @@ class DataSource(object):
                 site_index = i
                 break
         site_file = self.all_configs["flow_gage_file"][site_index]
-        data_temp = pd.read_csv(site_file,header=None, encoding="UTF-8")
+        data_temp = pd.read_csv(site_file,header=None, encoding="UTF-8-sig")
         #data_temp = pd.read_csv(site_file, header=None)
         t_range_list = hydro_time.t_range_days(self.t_range)
         nt = t_range_list.shape[0]
@@ -66,6 +66,10 @@ class DataSource(object):
                                var_name='year', value_name=flow_col_name)
             years = data_new.iloc[:, 1].values.astype(int)
             df_month_day = data_new.iloc[:, 0]
+
+            # months = np.array([int(month_day.split('月')[0]) for month_day in df_month_day])
+            # months = np.array([month_day.split('月')[0] for month_day in df_month_day])
+            # days = np.array([month_day.split('月')[1][:-1] for month_day in df_month_day])
             months = np.array([int(month_day.split('月')[0]) for month_day in df_month_day])
             days = np.array([int(month_day.split('月')[1][:-1]) for month_day in df_month_day])
             df_date = pd.DataFrame({date_columns[0]: years, date_columns[1]: months, date_columns[2]: days})
