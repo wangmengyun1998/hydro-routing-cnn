@@ -117,6 +117,8 @@ class TryCnn(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=1, padding=1),
 
             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=(1,1)),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=1, padding=1),
             nn.Conv2d(in_channels=64, out_channels=128, kernel_size=2 ),
 
             nn.ReLU(inplace=True),
@@ -126,7 +128,7 @@ class TryCnn(nn.Module):
         self.regression = nn.Sequential(
             nn.Dropout(p=0.25),
             # nn.Dropout(p=0.25),
-            nn.Linear(  4992, 95),
+            nn.Linear( 7168, 95),
             nn.ReLU(inplace=True),
             nn.Dropout(p=0.5),
             nn.Linear(95, output_dim)

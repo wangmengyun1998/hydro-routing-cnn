@@ -75,11 +75,5 @@ class MyTestCase(unittest.TestCase):
         # cnn_pred_value, cnn_obs_value = cnn_train_forecast(input=data, output=targets, stat_dict)
         print(model_trained)
 
-
-
-
-
-
-
 if __name__ == '__main__':
     unittest.main()  #运行类中每一个测试用例
